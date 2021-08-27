@@ -1,0 +1,24 @@
+{
+  "scripts": {
+    "build": "webpack"
+  },
+  "dependencies": {
+    "@types/webextension-polyfill": "^0.8.0"
+  },
+  "devDependencies": {
+    "@types/copy-webpack-plugin": "^8.0.1",
+    "copy-webpack-plugin": "^9.0.1",
+    "ts-loader": "^9.2.5",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.2",
+    "webextension-polyfill": "^0.8.0",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0"
+  },
+  "name": "quick-signup",
+  "version": "0.0.1",
+  "description": "quick-signup is a Google Chrome Extension to fill sign-up forms automatically.",
+  "repository": "git@github.com:shiraily/quick-signup.git",
+  "author": "Takaaki Shirai <25303121+shiraily@users.noreply.github.com>",
+  "license": "MIT"
+}
