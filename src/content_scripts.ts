@@ -1,7 +1,6 @@
 import browser from "webextension-polyfill";
 
 console.log("extension is loaded!");
-window.console.log("ppap1");
 
 const execute = async () => {
   const value = await browser.storage.local.get('date')

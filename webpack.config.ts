@@ -4,6 +4,7 @@ import CopyPlugin from 'copy-webpack-plugin';
 
 const config: Configuration = {
   mode: "development",
+  devtool: 'inline-source-map', // source-mapだと警告が邪魔
   entry: {
     content_scripts: path.join(__dirname, 'src', 'content_scripts.ts')
   },

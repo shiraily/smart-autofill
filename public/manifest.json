@@ -1,13 +1,13 @@
 {
   "name": "名前",
   "manifest_version": 2,
-  "version": "1.0",
+  "version": "0.1",
   "browser_action": {
     "default_icon": "icon_32.png"
   },
   "content_scripts": [
     {
-      "matches": ["https://www.google.com/"],
+      "matches": ["http://*/*", "https://*/*"],
       "js": ["content_scripts.js"]
     }
   ],
