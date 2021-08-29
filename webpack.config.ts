@@ -6,7 +6,8 @@ const config: Configuration = {
   mode: "development",
   devtool: 'inline-source-map', // source-mapだと警告が邪魔
   entry: {
-    content_scripts: path.join(__dirname, 'src', 'content_scripts.ts')
+    content_scripts: path.join(__dirname, 'src', 'content_scripts.ts'),
+    background: path.join(__dirname, 'src', 'background.ts')
   },
   output: {
     // distディレクトリにcontent_scripts.jsを吐く
@@ -27,8 +28,8 @@ const config: Configuration = {
     // publicディレクトリにあるファイルをdistディレクトリにコピーする
     new CopyPlugin(
       {
-        patterns: [{
-          from: "public", to: '.' },
+        patterns: [
+          { from: "public", to: '.' },
         ],
       }
     )

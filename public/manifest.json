@@ -1,15 +1,19 @@
 {
   "name": "名前",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "version": "0.1",
-  "browser_action": {
-    "default_icon": "icon_32.png"
+  "action": {
+    "default_icon": { "32": "icon_32.png" },
+    "default_title": "会員情報を自動入力"
   },
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
+      "matches": ["http://*/*", "https://*/*", "file://*"],
       "js": ["content_scripts.js"]
     }
   ],
+	"background": {
+		"service_worker": "background.js"
+	},
   "permissions": ["storage"]
 }
