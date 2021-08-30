@@ -1,4 +1,4 @@
 /dist/
-/test/private/data/
+/tests/private/data/
 
 /node_modules/
