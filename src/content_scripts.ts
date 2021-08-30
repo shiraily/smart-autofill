@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { fillForm } from "./dom/fill";
 
 console.log("content script is loaded!");
 browser.runtime.onMessage.addListener((msg, _ ) => {
@@ -7,13 +8,4 @@ browser.runtime.onMessage.addListener((msg, _ ) => {
 		fillForm();
 	}
   //return {response: "ok"};
-})
-
-const $ = document.querySelectorAll.bind(document);
-
-function fillForm() {
-  console.log("TODO fill form");
-  $("form input[type=text]").forEach((element: any) => {
-    element.value = "test";
-  });
-}
+});

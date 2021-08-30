@@ -14,6 +14,9 @@ const config: Configuration = {
     path: path.join(__dirname, 'dist'),
     filename: '[name].js'
   },
+  resolve: {
+    extensions: [".ts"],
+  },
   module: {  
     rules: [
       {
