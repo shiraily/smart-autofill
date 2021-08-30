@@ -9,6 +9,11 @@ browser.runtime.onMessage.addListener((msg, _ ) => {
   //return {response: "ok"};
 })
 
+const $ = document.querySelectorAll.bind(document);
+
 function fillForm() {
   console.log("TODO fill form");
+  $("form input[type=text]").forEach((element: any) => {
+    element.value = "test";
+  });
 }
