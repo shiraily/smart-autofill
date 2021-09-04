@@ -14,7 +14,7 @@ export function classify(element: HTMLElement): MemberField | null {
   const name = element.getAttribute("name") || "";
   // TODO need TypeScript type?
   if (
-    ["nickName", "email", "firstName", "lastName", "familyName"].includes(name)
+    ["nickname", "email", "firstName", "lastName", "familyName"].includes(name)
   ) {
     return { name };
   }

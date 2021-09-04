@@ -19,10 +19,10 @@
     "webpack": "^5.51.1",
     "webpack-cli": "^4.8.0"
   },
-  "name": "quick-signup",
+  "name": "smart-autofill",
   "version": "0.0.1",
-  "description": "quick-signup is a Google Chrome Extension to fill sign-up forms automatically.",
-  "repository": "git@github.com:shiraily/quick-signup.git",
+  "description": "smart-autofill is a Google Chrome Extension which fills various sign-up forms automatically.",
+  "repository": "git@github.com:shiraily/smart-autofill.git",
   "author": "Takaaki Shirai <25303121+shiraily@users.noreply.github.com>",
   "license": "MIT"
 }

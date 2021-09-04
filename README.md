@@ -1,2 +1,2 @@
-# quick-signup
-[future work] quick-signup is a Google Chrome Extension to fill sign-up form automatically.
+# smart-autofill
+[WIP] smart-autofill is a Google Chrome Extension which fills various sign-up forms automatically.
