@@ -1,12 +1,15 @@
-import { inputTypes, MemberField } from "../entity/Entity";
+import { ClueType, inputTypes, MemberField } from "../entity/Entity";
 
 export function classify(element: HTMLElement): MemberField | null {
+  // TODO sometimes parent disables form controls
+  const scores = new Map<ClueType, number>();
+
   const type = element.getAttribute("type") || "";
-  // sometimes parent disables form controls
+  const tagName = element.tagName.toLowerCase();
   if (
-    (element.tagName === "INPUT" && inputTypes.includes(type)) ||
-    element.tagName === "SELECT" ||
-    element.tagName === "TEXTAREA"
+    (tagName === "input" && inputTypes.includes(type)) ||
+    tagName === "select" ||
+    tagName === "textarea"
   ) {
     return null;
   }
