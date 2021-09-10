@@ -14,7 +14,7 @@ export type FormControlTag =
   | "select"
   | "textarea";
 
-// Excerpt of https://developer.mozilla.org/ja/docs/Web/HTML/Element/input#input_types
+// Excerpt from https://developer.mozilla.org/ja/docs/Web/HTML/Element/input#input_types
 export const inputTypes = [
   "button",
   "checkbox",
@@ -30,7 +30,7 @@ export const inputTypes = [
   "text",
   "time",
   "week",
-].map((t) => t.toUpperCase());
+] as const;
 export type InputType = typeof inputTypes[number];
 
 // TODO
@@ -48,10 +48,12 @@ const clueTypes = [
   "siblingNo",
   // "class", TODO class1, class2, ...?
   // "numSiblings", TODO
-]
+] as const
 export type ClueType = typeof clueTypes[number];
 
 const itemNames = [
+  "nickName",
+
   "fullName",
   "firstName",
   "lastName",
@@ -72,10 +74,28 @@ const itemNames = [
   "houseNumber", // 番地
   "building", // 建物名・部屋番号
   
-  "email",
+  "email", // TODO @前後で分割
   "phoneNumber",
-]
+  "phoneNumber1",
+  "phoneNumber2",
+  "phoneNumber3",
+] as const;
 export type ItemNameType = typeof itemNames[number];
+
+const categoryNames = [
+  "name",
+  "birthDate",
+  "phoneNumber",
+] as const;
+export type CategoryNameType = typeof categoryNames[number];
+
+export const categoryItems = new Map<CategoryNameType, ItemNameType[]>(
+  [
+    ["name", ["fullName", "firstName", "lastName"]],
+    ["birthDate", ["birthDate", "birthYear", "birthMonth", "birthDay"]],
+    ["phoneNumber", ["phoneNumber", "phoneNumber1", "phoneNumber2", "phoneNumber3"]]
+  ]
+  )
 
 export type CharType = "hira" | "kata" | "kanji" | "rome" | "num";
 

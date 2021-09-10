@@ -1,33 +1,57 @@
-import { ClueType, inputTypes, MemberField } from "../entity/Entity";
+import {  categoryItems, CategoryNameType, FormControlTag, InputType, inputTypes, ItemNameType, MemberField } from "../entity/Entity";
 
 export function classify(element: HTMLElement): MemberField | null {
   // TODO sometimes parent disables form controls
-  const scores = new Map<ClueType, number>();
+  const scores = new Map<ItemNameType, number>();
+  const stdScore = 100;
+  const highScore = 10_000;
+  function add(type: ItemNameType, score: number) {
+    scores.set(type, (scores.get(type) || 0) + score);
+  }
 
-  const type = element.getAttribute("type") || "";
-  const tagName = element.tagName.toLowerCase();
+  function addToCategory(type: CategoryNameType, score: number) {
+    categoryItems.get(type)?.forEach(i => {
+      add(i, score);
+    })
+  }
+
+  const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
+  const tagName = element.tagName.toLowerCase() as FormControlTag;
   if (
-    (tagName === "input" && inputTypes.includes(type)) ||
-    tagName === "select" ||
-    tagName === "textarea"
+    !(tagName === "input" && inputTypes.includes(type)) &&
+    tagName !== "select"
   ) {
     return null;
+  }
+
+  switch (type) {
+    case "email":
+      add("email", Infinity);
+      break;
+    case "tel":
+      addToCategory("phoneNumber", highScore)
+      break;
+    case "radio":
+      add("sex", stdScore);
+      break;
+  }
+
+  if (tagName == "select") {
+    add("birthYear", highScore);
+    add("birthMonth", highScore);
+    add("birthDay", highScore);
+    add("prefecture", highScore);
   }
 
   const name = element.getAttribute("name") || "";
   // TODO need TypeScript type?
   if (
-    ["nickname", "email", "firstName", "lastName", "familyName"].includes(name)
+    ["nickname", "email", "firstName", "lastName"].includes(name)
   ) {
-    return { name };
+    add(name as ItemNameType, Infinity);
   }
   const placeholder = element.getAttribute("placeholder") || "";
-  if (placeholder.includes("山田")) {
-    return {
-      name: "firstName",
-      // TODO kanji, zenkaku?,
-    };
-  }
 
-  return null;
+  const item = [...scores.entries()].sort(e => e[1])?.[0];
+  return {name: item?.[0]} as MemberField;
 }

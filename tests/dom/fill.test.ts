@@ -8,5 +8,5 @@ test("Fill form simply", () => {
 
   const $ = document.querySelector.bind(document);
   fillForm();
-  expect(($("#w2phoneNoFirst") as HTMLInputElement).value).toEqual("test");
+  expect(($("#w2lastName") as HTMLInputElement).value).toEqual("lastName");
 });
