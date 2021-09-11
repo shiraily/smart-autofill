@@ -1,4 +1,12 @@
-import {  categoryItems, CategoryNameType, FormControlTag, InputType, inputTypes, ItemNameType, MemberField } from "../entity/Entity";
+import {
+  categoryItems,
+  CategoryNameType,
+  FormControlTag,
+  InputType,
+  inputTypes,
+  ItemNameType,
+  MemberField,
+} from "../entity/Entity";
 
 export function classify(element: HTMLElement): MemberField | null {
   // TODO sometimes parent disables form controls
@@ -10,9 +18,9 @@ export function classify(element: HTMLElement): MemberField | null {
   }
 
   function addToCategory(type: CategoryNameType, score: number) {
-    categoryItems.get(type)?.forEach(i => {
+    categoryItems.get(type)?.forEach((i) => {
       add(i, score);
-    })
+    });
   }
 
   const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
@@ -29,7 +37,7 @@ export function classify(element: HTMLElement): MemberField | null {
       add("email", Infinity);
       break;
     case "tel":
-      addToCategory("phoneNumber", highScore)
+      addToCategory("phoneNumber", highScore);
       break;
     case "radio":
       add("sex", stdScore);
@@ -45,13 +53,11 @@ export function classify(element: HTMLElement): MemberField | null {
 
   const name = element.getAttribute("name") || "";
   // TODO need TypeScript type?
-  if (
-    ["nickname", "email", "firstName", "lastName"].includes(name)
-  ) {
+  if (["nickname", "email", "firstName", "lastName"].includes(name)) {
     add(name as ItemNameType, Infinity);
   }
   const placeholder = element.getAttribute("placeholder") || "";
 
-  const item = [...scores.entries()].sort(e => e[1])?.[0];
-  return {name: item?.[0]} as MemberField;
+  const item = [...scores.entries()].sort((e) => e[1])?.[0];
+  return { name: item?.[0] } as MemberField;
 }

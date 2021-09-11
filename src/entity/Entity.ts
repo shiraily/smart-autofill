@@ -48,7 +48,7 @@ const clueTypes = [
   "siblingNo",
   // "class", TODO class1, class2, ...?
   // "numSiblings", TODO
-] as const
+] as const;
 export type ClueType = typeof clueTypes[number];
 
 const itemNames = [
@@ -73,7 +73,7 @@ const itemNames = [
   "street", // 町名 / 条丁目
   "houseNumber", // 番地
   "building", // 建物名・部屋番号
-  
+
   "email", // TODO @前後で分割
   "phoneNumber",
   "phoneNumber1",
@@ -82,20 +82,17 @@ const itemNames = [
 ] as const;
 export type ItemNameType = typeof itemNames[number];
 
-const categoryNames = [
-  "name",
-  "birthDate",
-  "phoneNumber",
-] as const;
+const categoryNames = ["name", "birthDate", "phoneNumber"] as const;
 export type CategoryNameType = typeof categoryNames[number];
 
-export const categoryItems = new Map<CategoryNameType, ItemNameType[]>(
+export const categoryItems = new Map<CategoryNameType, ItemNameType[]>([
+  ["name", ["fullName", "firstName", "lastName"]],
+  ["birthDate", ["birthDate", "birthYear", "birthMonth", "birthDay"]],
   [
-    ["name", ["fullName", "firstName", "lastName"]],
-    ["birthDate", ["birthDate", "birthYear", "birthMonth", "birthDay"]],
-    ["phoneNumber", ["phoneNumber", "phoneNumber1", "phoneNumber2", "phoneNumber3"]]
-  ]
-  )
+    "phoneNumber",
+    ["phoneNumber", "phoneNumber1", "phoneNumber2", "phoneNumber3"],
+  ],
+]);
 
 export type CharType = "hira" | "kata" | "kanji" | "rome" | "num";
 
