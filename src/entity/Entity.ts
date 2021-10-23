@@ -33,11 +33,6 @@ export const inputTypes = [
 ] as const;
 export type InputType = typeof inputTypes[number];
 
-// TODO
-export interface MemberField {
-  name: string;
-}
-
 const clueTypes = [
   "tagName",
   "name",

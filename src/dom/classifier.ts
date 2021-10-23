@@ -5,14 +5,17 @@ import {
   InputType,
   inputTypes,
   ItemNameType,
-  MemberField,
 } from "../entity/Entity";
+import { MemberField } from "../entity/User";
+import { normalize } from "../text/textUtil";
 
+// form control要素が何のフィールドかを分類する
 export function classify(element: HTMLElement): MemberField | null {
   // TODO sometimes parent disables form controls
   const scores = new Map<ItemNameType, number>();
-  const stdScore = 100;
+  const midScore = 100;
   const highScore = 10_000;
+
   function add(type: ItemNameType, score: number) {
     scores.set(type, (scores.get(type) || 0) + score);
   }
@@ -40,7 +43,7 @@ export function classify(element: HTMLElement): MemberField | null {
       addToCategory("phoneNumber", highScore);
       break;
     case "radio":
-      add("sex", stdScore);
+      add("sex", midScore);
       break;
   }
 
@@ -51,12 +54,11 @@ export function classify(element: HTMLElement): MemberField | null {
     add("prefecture", highScore);
   }
 
-  const name = element.getAttribute("name") || "";
+  const name = normalize(element.getAttribute("name"));
   // TODO need TypeScript type?
-  ["nickname", "email", "firstName", "lastName"].forEach((_name) => {
+  ["nickname", "email", "first name", "last name"].forEach((_name) => {
     if (name.indexOf(_name) >= 0) {
       add(_name as ItemNameType, Infinity);
-      if (name.indexOf)
     }
   });
   const placeholder = element.getAttribute("placeholder") || "";
