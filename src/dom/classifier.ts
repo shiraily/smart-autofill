@@ -53,9 +53,12 @@ export function classify(element: HTMLElement): MemberField | null {
 
   const name = element.getAttribute("name") || "";
   // TODO need TypeScript type?
-  if (["nickname", "email", "firstName", "lastName"].includes(name)) {
-    add(name as ItemNameType, Infinity);
-  }
+  ["nickname", "email", "firstName", "lastName"].forEach((_name) => {
+    if (name.indexOf(_name) >= 0) {
+      add(_name as ItemNameType, Infinity);
+      if (name.indexOf)
+    }
+  });
   const placeholder = element.getAttribute("placeholder") || "";
 
   const item = [...scores.entries()].sort((e) => e[1])?.[0];

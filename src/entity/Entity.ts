@@ -94,6 +94,7 @@ export const categoryItems = new Map<CategoryNameType, ItemNameType[]>([
   ],
 ]);
 
+/** 文字の種類。例: ひらがな */
 export type CharType = "hira" | "kata" | "kanji" | "rome" | "num";
 
 export interface ItemType {
@@ -103,4 +104,5 @@ export interface ItemType {
 
   // TODO
   // zero padding?
+  // TODO 大文字小文字?
 }
