@@ -9,6 +9,11 @@ import {
 import { MemberField } from "../entity/User";
 import { normalize } from "../text/textUtil";
 
+/**
+ * スコア計算について
+ * firstNameとlastNameは混同されやすいので、スコアを少し小さくする
+ */
+
 // form control要素が何のフィールドかを分類する
 export function classify(element: HTMLElement): MemberField | null {
   // TODO sometimes parent disables form controls
@@ -26,6 +31,7 @@ export function classify(element: HTMLElement): MemberField | null {
     });
   }
 
+  // type属性とtagName
   const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
   const tagName = element.tagName.toLowerCase() as FormControlTag;
   if (
@@ -34,7 +40,6 @@ export function classify(element: HTMLElement): MemberField | null {
   ) {
     return null;
   }
-
   switch (type) {
     case "email":
       add("email", Infinity);
@@ -46,7 +51,6 @@ export function classify(element: HTMLElement): MemberField | null {
       add("sex", midScore);
       break;
   }
-
   if (tagName == "select") {
     add("birth year", highScore);
     add("birth month", highScore);
@@ -54,6 +58,7 @@ export function classify(element: HTMLElement): MemberField | null {
     add("prefecture", highScore);
   }
 
+  // name属性
   const name = normalize(element.getAttribute("name"));
   // TODO need TypeScript type?
   ["nickname", "email", "first name", "last name"].forEach((_name) => {
@@ -71,8 +76,46 @@ export function classify(element: HTMLElement): MemberField | null {
       add(type, highScore);
     }
   });
+
+  // TODO
   const placeholder = element.getAttribute("placeholder") || "";
+
+  // TODO get label text from element
+  console.log(getLabel(element)?.textContent);
 
   const item = [...scores.entries()].sort((e) => e[1])?.[0];
   return { name: item?.[0] } as MemberField;
+}
+
+// label要素取得のためにたどる最大の親要素数
+const maxParentLevelForLabel = 3;
+
+// 対応するlabel要素を取得する
+function getLabel(element: HTMLElement): HTMLLabelElement | null {
+  let level = 0;
+  const id = element.getAttribute("id");
+
+  let currentElement: HTMLElement = element;
+  while (level < maxParentLevelForLabel) {
+    const parent = currentElement.parentElement;
+    if (!parent) {
+      return null;
+    }
+
+    const labels = parent?.querySelectorAll("label");
+    const label = Array.from(labels || []).find((l) => {
+      if (l.getAttribute("for") === id) {
+        return true;
+      } else if (l.contains(element)) {
+        return true;
+      }
+      return false;
+    });
+    if (label) {
+      return label;
+    }
+    currentElement = parent;
+    level++;
+  }
+  return null;
 }
