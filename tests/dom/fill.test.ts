@@ -8,8 +8,14 @@ test("Fill form simply", () => {
 
   const $ = document.querySelector.bind(document);
   fillForm();
-  expect(($("#w2lastName") as HTMLInputElement).value).toEqual("lastName");
+  expect(($("#w2lastName") as HTMLInputElement).value).toEqual("last name");
   expect(($("#w2firstNameKana") as HTMLInputElement).value).toEqual(
-    "firstName"
+    "first name"
+  );
+  expect(($("#w2postNoFirst1") as HTMLInputElement).value).toEqual(
+    "postal code 1"
+  );
+  expect(($("#w2postNoFirst2") as HTMLInputElement).value).toEqual(
+    "postal code 2"
   );
 });

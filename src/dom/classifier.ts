@@ -40,7 +40,7 @@ export function classify(element: HTMLElement): MemberField | null {
       add("email", Infinity);
       break;
     case "tel":
-      addToCategory("phoneNumber", highScore);
+      addToCategory("phone number", highScore);
       break;
     case "radio":
       add("sex", midScore);
@@ -48,9 +48,9 @@ export function classify(element: HTMLElement): MemberField | null {
   }
 
   if (tagName == "select") {
-    add("birthYear", highScore);
-    add("birthMonth", highScore);
-    add("birthDay", highScore);
+    add("birth year", highScore);
+    add("birth month", highScore);
+    add("birth day", highScore);
     add("prefecture", highScore);
   }
 
@@ -59,6 +59,16 @@ export function classify(element: HTMLElement): MemberField | null {
   ["nickname", "email", "first name", "last name"].forEach((_name) => {
     if (name.indexOf(_name) >= 0) {
       add(_name as ItemNameType, Infinity);
+    }
+  });
+  (
+    [
+      ["post no first", "postal code 1"],
+      ["post no second", "postal code 2"],
+    ] as [string, ItemNameType][]
+  ).forEach(([_name, type]) => {
+    if (name.indexOf(_name) >= 0) {
+      add(type, highScore);
     }
   });
   const placeholder = element.getAttribute("placeholder") || "";

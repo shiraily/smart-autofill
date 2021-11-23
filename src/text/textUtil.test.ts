@@ -3,10 +3,14 @@ import { normalize } from "./textUtil";
 describe("Normalize text", () => {
   const testCases = [
     ["firstName", "first name"],
-    ["first_name", "first name"],
-    ["first-name", "first name"],
+    ["firstName1", "first name 1"],
+    ["first_name_1", "first name 1"],
+    ["first-name-1", "first name 1"],
+    ["first_Name_1", "first name 1"],
     ["block__first-name", "block first name"],
+    ["block__firstName", "block first name"],
     ["first-Name", "first name"],
+    ["postNoFirst", "post no first"],
     ["", ""],
     [null, ""],
   ] as [string, string][];
