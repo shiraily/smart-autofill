@@ -78,7 +78,7 @@ export function classify(element: HTMLElement): MemberField | null {
   });
 
   // TODO
-  const placeholder = element.getAttribute("placeholder") || "";
+  // const placeholder = element.getAttribute("placeholder") || "";
 
   // TODO get label text from element
   console.log(getLabel(element)?.textContent);

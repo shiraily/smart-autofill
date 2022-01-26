@@ -92,14 +92,76 @@ export const categoryItems = new Map<CategoryNameType, ItemNameType[]>([
 ]);
 
 /** 文字の種類。例: ひらがな */
-export type CharType = "hira" | "kata" | "kanji" | "rome" | "num";
+export type CharType = "hiragana" | "katakana" | "kanji" | "rome" | "num";
+export type CharTypeDefinition = {
+  charType: CharType;
+  hasHalfWidth?: boolean;
+  hasFullWidth?: boolean;
+  hasUpperCase?: boolean;
+};
+
+// TODO 大文字小文字や、各種文字を混在させるケースもある
+
+export const charTypes = new Map<CharType, CharTypeDefinition>(
+  [
+    {
+      charType: "hiragana",
+      hasFullWidth: true,
+    },
+    {
+      charType: "katakana",
+      hasHalfWidth: true,
+      hasFullWidth: true,
+    },
+    { charType: "kanji", hasFullWidth: true },
+    {
+      charType: "rome",
+      hasHalfWidth: true,
+      hasFullWidth: true,
+      hasUpperCase: true,
+    },
+    {
+      charType: "num",
+      hasHalfWidth: true,
+      hasFullWidth: true,
+      // TODO zero padding
+    },
+  ].map((x) => [x.charType, x]) as [CharType, CharTypeDefinition][]
+);
 
 export interface ItemType {
   name: ItemNameType;
-  zenkaku: boolean;
-  charType: CharType;
-
-  // TODO
-  // zero padding?
-  // TODO 大文字小文字?
+  charTypes: Array<CharType>;
 }
+
+// TODO specify charTypes
+export const ItemTypes: Array<ItemType> = [
+  { name: "nickname", charTypes: [] },
+  { name: "full name", charTypes: [] },
+  { name: "first name", charTypes: [] },
+  { name: "last name", charTypes: [] },
+
+  { name: "birth date", charTypes: [] },
+  { name: "birth year", charTypes: [] },
+  { name: "birth month", charTypes: [] },
+  { name: "birth day", charTypes: [] },
+
+  { name: "sex", charTypes: [] },
+
+  { name: "postal code", charTypes: [] },
+  { name: "postal code 1", charTypes: [] },
+  { name: "postal code 2", charTypes: [] },
+  { name: "country", charTypes: [] },
+  { name: "prefecture", charTypes: [] },
+  { name: "city", charTypes: [] },
+  { name: "city county", charTypes: [] },
+  { name: "street", charTypes: [] },
+  { name: "house number", charTypes: [] },
+  { name: "building", charTypes: [] },
+
+  { name: "email", charTypes: [] },
+  { name: "phone number", charTypes: [] },
+  { name: "phone number 1", charTypes: [] },
+  { name: "phone number 2", charTypes: [] },
+  { name: "phone number 3", charTypes: [] },
+];

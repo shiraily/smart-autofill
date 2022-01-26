@@ -1,10 +1,6 @@
 {
   "editor.formatOnSave": true,
-  "prettier.documentSelectors": [
-    "**/*.ts"
-  ],
+  "prettier.documentSelectors": ["**/*.ts"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "cSpell.words": [
-    "zenkaku"
-  ]
+  "cSpell.words": ["hankaku", "zenkaku"]
 }
