@@ -8,6 +8,7 @@ test("Fill form simply", () => {
 
   const $ = document.querySelector.bind(document);
   fillForm();
+  // TODO idでの参照をやめる
   expect(($("#w2lastName") as HTMLInputElement).value).toEqual("last name");
   expect(($("#w2firstNameKana") as HTMLInputElement).value).toEqual(
     "first name"

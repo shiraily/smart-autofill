@@ -92,7 +92,7 @@ export const categoryItems = new Map<CategoryNameType, ItemNameType[]>([
 ]);
 
 /** 文字の種類。例: ひらがな */
-export type CharType = "hiragana" | "katakana" | "kanji" | "rome" | "num";
+export type CharType = "hiragana" | "katakana" | "kanji" | "alphabet" | "num";
 export type CharTypeDefinition = {
   charType: CharType;
   hasHalfWidth?: boolean;
@@ -115,7 +115,7 @@ export const charTypes = new Map<CharType, CharTypeDefinition>(
     },
     { charType: "kanji", hasFullWidth: true },
     {
-      charType: "rome",
+      charType: "alphabet",
       hasHalfWidth: true,
       hasFullWidth: true,
       hasUpperCase: true,
