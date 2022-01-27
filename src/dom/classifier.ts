@@ -16,8 +16,27 @@ import { normalize } from "../text/textUtil";
 const midScore = 100;
 const highScore = 10_000;
 
+interface FormControl {
+  tagName: string;
+  id: string;
+  name: string;
+  type: InputType;
+  placeholder: string;
+  label: string;
+}
+
+export function extract(element: HTMLElement): FormControl {
+  const tagName = element.tagName.toLowerCase();
+  const id = element.getAttribute("id") || "";
+  const name = normalize(element.getAttribute("name"));
+  const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
+  const placeholder = element.getAttribute("placeholder") || "";
+  const label = getLabelText(element);
+  return { tagName, id, name, type, placeholder, label };
+}
+
 // form control要素が何のフィールドかを分類する
-export function classify(element: HTMLElement): MemberField | null {
+export function classify(formControl: FormControl): MemberField | null {
   // TODO sometimes parent disables form controls
   const scores = new Map<ItemNameType, number>();
 
@@ -32,7 +51,7 @@ export function classify(element: HTMLElement): MemberField | null {
   }
 
   // type属性とtagName
-  const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
+  const type = formControl.type;
   switch (type) {
     case "email":
       add("email", Infinity);
@@ -44,7 +63,7 @@ export function classify(element: HTMLElement): MemberField | null {
       add("sex", midScore);
       break;
   }
-  const tagName = element.tagName.toLowerCase() as FormControlTag;
+  const tagName = formControl.tagName;
   if (tagName == "select") {
     add("birth year", highScore);
     add("birth month", highScore);
@@ -53,13 +72,15 @@ export function classify(element: HTMLElement): MemberField | null {
   }
 
   // name属性
-  const name = normalize(element.getAttribute("name"));
-  // TODO need TypeScript type?
-  ["nickname", "email", "first name", "last name"].forEach((_name) => {
-    if (name.indexOf(_name) >= 0) {
-      add(_name as ItemNameType, Infinity);
+  const name = formControl.name;
+  // first name <-> last nameの間違いがたまにある
+  ["nickname", "email", "mail add", "first name", "last name"].forEach(
+    (_name) => {
+      if (name.indexOf(_name) >= 0) {
+        add(_name as ItemNameType, midScore);
+      }
     }
-  });
+  );
   (
     [
       ["post no first", "postal code 1"],
@@ -74,17 +95,15 @@ export function classify(element: HTMLElement): MemberField | null {
   // TODO
   // const placeholder = element.getAttribute("placeholder") || "";
 
-  const label = getLabelText(element);
-  console.log(label);
-  if (label.includes("姓名")) {
-    add("full name", midScore);
-  } else if (label.includes("姓")) {
-    add("last name", highScore);
-  } else if (label.includes("名")) {
-    add("first name", highScore);
-  }
+  const label = formControl.label;
+  labelScoreMap.forEach((value, _label) => {
+    if (label.indexOf(_label) >= 0) {
+      add(value.key, value.score);
+      return;
+    }
+  });
 
-  const item = [...scores.entries()].sort((e) => e[1])?.[0];
+  const item = [...scores.entries()].sort((a, b) => b[1] - a[1])?.[0];
   return { name: item?.[0] } as MemberField;
 }
 
@@ -127,7 +146,7 @@ const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   ["呼び", { key: "nickname", score: highScore }],
   ["姓名", { key: "full name", score: highScore }],
   ["姓", { key: "last name", score: highScore }],
-  ["名", { key: "first name", score: highScore }],
+  ["名", { key: "first name", score: midScore + 1 }], // TODO 町名
   ["性別", { key: "sex", score: highScore }],
   ["男", { key: "sex", score: highScore }],
   ["女", { key: "sex", score: highScore }],

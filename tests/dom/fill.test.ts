@@ -2,7 +2,7 @@ import { listFormControls } from "../../src/dom/fill";
 import { normalize } from "../../src/text/textUtil";
 import { itemNames } from "../../src/entity/Entity";
 import fs from "fs";
-import { classify } from "../../src/dom/classifier";
+import { classify, extract } from "../../src/dom/classifier";
 
 describe("Fill form simply", () => {
   document.body.innerHTML = fs
@@ -13,18 +13,19 @@ describe("Fill form simply", () => {
 
   const itemNamesSet = new Set(itemNames);
   formControls.forEach((x) => {
-    const attrs = getAttributes(x);
-    const dataAttrs = filterDataAttributes(attrs);
+    const attrs = getAttributes(x); // TODO 不要
+    const dataAttrs = filterDataAttributes(attrs.map((x) => x[0]));
     if (!dataAttrs.length) return;
 
     const normalized = dataAttrs.map((a) => normalize(a));
     const matched = normalized.find((n) => itemNamesSet.has(n));
     expect(matched).toBeTruthy();
     // TODO 全体を見て入力値を決める可能性があるので、全体でclassifyしたい
-    const actual = classify(x as HTMLElement);
+    const formControl = extract(x as HTMLElement);
+    const actual = classify(formControl);
 
     // TODO print attrs key and value
-    test(`${x.tagName}, ${attrs}`, () => {
+    test(`${JSON.stringify(formControl)}`, () => {
       expect(actual?.name).toBe(matched);
       // TODO katakana, etc.
     });
@@ -44,10 +45,10 @@ describe("Fill form simply", () => {
   );*/
 });
 
-function getAttributes(el: Element): string[] {
-  const arr: string[] = [];
+function getAttributes(el: Element): [string, string][] {
+  const arr: [string, string][] = [];
   for (var i = 0, attrs = el.attributes, n = attrs.length; i < n; i++) {
-    arr.push(attrs[i].nodeName);
+    arr.push([attrs[i].nodeName, attrs[i].nodeValue || ""]);
   }
   return arr;
 }
