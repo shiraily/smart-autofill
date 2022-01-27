@@ -46,7 +46,7 @@ const clueTypes = [
 ] as const;
 export type ClueType = typeof clueTypes[number];
 
-const itemNames = [
+export const itemNames = [
   "nickname",
 
   "full name",
@@ -76,7 +76,7 @@ const itemNames = [
   "phone number 1",
   "phone number 2",
   "phone number 3",
-] as const;
+];
 export type ItemNameType = typeof itemNames[number];
 
 const categoryNames = ["name", "birth date", "phone number"] as const;

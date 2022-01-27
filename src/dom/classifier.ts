@@ -3,7 +3,6 @@ import {
   CategoryNameType,
   FormControlTag,
   InputType,
-  inputTypes,
   ItemNameType,
 } from "../entity/Entity";
 import { MemberField } from "../entity/User";
@@ -34,13 +33,6 @@ export function classify(element: HTMLElement): MemberField | null {
 
   // type属性とtagName
   const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
-  const tagName = element.tagName.toLowerCase() as FormControlTag;
-  if (
-    !(tagName === "input" && inputTypes.includes(type)) &&
-    tagName !== "select"
-  ) {
-    return null;
-  }
   switch (type) {
     case "email":
       add("email", Infinity);
@@ -52,6 +44,7 @@ export function classify(element: HTMLElement): MemberField | null {
       add("sex", midScore);
       break;
   }
+  const tagName = element.tagName.toLowerCase() as FormControlTag;
   if (tagName == "select") {
     add("birth year", highScore);
     add("birth month", highScore);
