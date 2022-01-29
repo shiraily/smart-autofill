@@ -100,8 +100,10 @@ export type CharTypeDefinition = {
   hasUpperCase?: boolean;
 };
 
-// TODO 大文字小文字や、各種文字を混在させるケースもある
-
+/**
+ * 各文字種の大文字小文字、半角全角になれるかどうかを定義
+ * TODO 大文字小文字や、各種文字を混在させるケースもある
+ */
 export const charTypes = new Map<CharType, CharTypeDefinition>(
   [
     {

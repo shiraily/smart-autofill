@@ -140,7 +140,6 @@ const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   ["呼び", { key: "nickname", score: highScore }],
   ["姓名", { key: "full name", score: highScore }],
   ["姓", { key: "last name", score: highScore }],
-  ["名", { key: "first name", score: midScore + 1 }], // TODO 町名
   ["性別", { key: "sex", score: highScore }],
   ["男", { key: "sex", score: highScore }],
   ["女", { key: "sex", score: highScore }],
@@ -154,6 +153,7 @@ const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   ["市区町村", { key: "city", score: highScore }],
   ["市区郡", { key: "city county", score: highScore }],
   ["町名", { key: "street", score: highScore }],
+  ["名", { key: "first name", score: midScore + 1 }], // 町名優先
   ["番地", { key: "house number", score: highScore }],
   ["建物", { key: "building", score: highScore }],
   ["部屋番号", { key: "building", score: highScore }],
