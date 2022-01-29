@@ -1,17 +1,11 @@
 import {
   categoryItems,
   CategoryNameType,
-  FormControlTag,
   InputType,
   ItemNameType,
 } from "../entity/Entity";
 import { MemberField } from "../entity/User";
 import { normalize } from "../text/textUtil";
-
-/**
- * スコア計算について
- * firstNameとlastNameは混同されやすいので、スコアを少し小さくする
- */
 
 const midScore = 100;
 const highScore = 10_000;
@@ -103,8 +97,8 @@ export function classify(formControl: FormControl): MemberField | null {
     }
   });
 
-  const item = [...scores.entries()].sort((a, b) => b[1] - a[1])?.[0];
-  return { name: item?.[0] } as MemberField;
+  const item = [...scores.entries()].sort((a, b) => b[1] - a[1]);
+  return item.length ? ({ name: item[0][0] } as MemberField) : null;
 }
 
 // label要素取得のためにたどる最大の親要素数

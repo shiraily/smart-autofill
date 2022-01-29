@@ -1,4 +1,4 @@
-import { FormControlTag, InputType, inputTypes } from "../entity/Entity";
+import { InputType, inputTypes } from "../entity/Entity";
 import { classify, extract } from "./classifier";
 
 const $ = document.querySelectorAll.bind(document);
@@ -10,7 +10,7 @@ export function listFormControls(): Array<Element> {
 
 function isFormControl(element: Element): boolean {
   const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
-  const tagName = element.tagName.toLowerCase() as FormControlTag;
+  const tagName = element.tagName.toLowerCase();
   if (
     !(tagName === "input" && inputTypes.includes(type)) &&
     tagName !== "select"
