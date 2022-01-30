@@ -1,33 +1,13 @@
 import {
   categoryItems,
   CategoryNameType,
-  InputType,
   ItemNameType,
 } from "../entity/Entity";
 import { MemberField } from "../entity/User";
-import { normalize } from "../text/textUtil";
+import { FormControl } from "./extractor";
 
 const midScore = 100;
 const highScore = 10_000;
-
-interface FormControl {
-  tagName: string;
-  id: string;
-  name: string;
-  type: InputType;
-  placeholder: string;
-  label: string;
-}
-
-export function extract(element: HTMLElement): FormControl {
-  const tagName = element.tagName.toLowerCase();
-  const id = element.getAttribute("id") || "";
-  const name = normalize(element.getAttribute("name"));
-  const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
-  const placeholder = element.getAttribute("placeholder") || "";
-  const label = getLabelText(element);
-  return { tagName, id, name, type, placeholder, label };
-}
 
 // form control要素が何のフィールドかを分類する
 export function classify(formControl: FormControl): MemberField | null {
@@ -101,39 +81,6 @@ export function classify(formControl: FormControl): MemberField | null {
   return item.length ? ({ name: item[0][0] } as MemberField) : null;
 }
 
-// label要素取得のためにたどる最大の親要素数
-const maxParentLevelForLabel = 3;
-
-// 対応するlabel要素を取得する
-function getLabelText(element: HTMLElement): string {
-  let level = 0;
-  const id = element.getAttribute("id");
-
-  let currentElement: HTMLElement = element;
-  while (level < maxParentLevelForLabel) {
-    const parent = currentElement.parentElement;
-    if (!parent) {
-      return "";
-    }
-
-    const labels = parent?.querySelectorAll("label");
-    const label = Array.from(labels || []).find((l) => {
-      if (l.getAttribute("for") === id) {
-        return true;
-      } else if (l.contains(element)) {
-        return true;
-      }
-      return false;
-    });
-    if (label) {
-      return label.textContent || "";
-    }
-    currentElement = parent;
-    level++;
-  }
-  return "";
-}
-
 const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   ["ニックネーム", { key: "nickname", score: highScore }],
   ["ハンドルネーム", { key: "nickname", score: highScore }],
@@ -153,7 +100,7 @@ const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   ["市区町村", { key: "city", score: highScore }],
   ["市区郡", { key: "city county", score: highScore }],
   ["町名", { key: "street", score: highScore }],
-  ["名", { key: "first name", score: midScore + 1 }], // 町名優先
+  ["名", { key: "first name", score: midScore + 1 }], // 町名優先のため
   ["番地", { key: "house number", score: highScore }],
   ["建物", { key: "building", score: highScore }],
   ["部屋番号", { key: "building", score: highScore }],

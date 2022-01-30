@@ -2,7 +2,8 @@ import { listFormControls } from "../../src/dom/fill";
 import { normalize } from "../../src/text/textUtil";
 import { itemNames } from "../../src/entity/Entity";
 import fs from "fs";
-import { classify, extract } from "../../src/dom/classifier";
+import { classify } from "../../src/dom/classifier";
+import { extract } from "../../src/dom/extractor";
 
 describe("Fill form simply", () => {
   document.body.innerHTML = fs

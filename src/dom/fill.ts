@@ -1,5 +1,6 @@
 import { InputType, inputTypes } from "../entity/Entity";
-import { classify, extract } from "./classifier";
+import { classify } from "./classifier";
+import { extract } from "./extractor";
 
 const $ = document.querySelectorAll.bind(document);
 
