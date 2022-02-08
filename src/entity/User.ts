@@ -1,4 +1,6 @@
+import { ItemNameType } from "./Entity";
+
 /** ユーザーデータを保持するためのエンティティ */
-export interface MemberField {
-  name: string;
+export interface InputResult {
+  itemNameType: ItemNameType;
 }

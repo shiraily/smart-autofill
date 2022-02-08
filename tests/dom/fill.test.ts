@@ -25,7 +25,7 @@ describe("Fill form simply", () => {
     const actual = classify(formControl);
 
     test(`${JSON.stringify(formControl)}`, () => {
-      expect(actual?.name).toBe(matched);
+      expect(actual?.itemNameType).toBe(matched);
       // TODO katakana, etc.
     });
   });

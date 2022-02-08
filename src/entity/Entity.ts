@@ -92,78 +92,100 @@ export const categoryItems = new Map<CategoryNameType, ItemNameType[]>([
 ]);
 
 /** 文字の種類。例: ひらがな */
-export type CharType = "hiragana" | "katakana" | "kanji" | "alphabet" | "num";
+export type CharType =
+  | "hiragana"
+  | "katakana"
+  | "kanji" // 漢字を含む。千代田区1-1-1, 山田
+  | "alphabet"
+  | "number";
+
+type CharWidth = "full" | "half" | "mix";
+type CharCase = "upper" | "lower" | "mix" | "capitalized";
+
 export type CharTypeDefinition = {
   charType: CharType;
-  hasHalfWidth?: boolean;
-  hasFullWidth?: boolean;
-  hasUpperCase?: boolean;
+  width: CharWidth[];
+  case?: CharCase[];
 };
-
-/**
- * 各文字種の大文字小文字、半角全角になれるかどうかを定義
- * TODO 大文字小文字や、各種文字を混在させるケースもある
- */
-export const charTypes = new Map<CharType, CharTypeDefinition>(
-  [
-    {
-      charType: "hiragana",
-      hasFullWidth: true,
-    },
-    {
-      charType: "katakana",
-      hasHalfWidth: true,
-      hasFullWidth: true,
-    },
-    { charType: "kanji", hasFullWidth: true },
-    {
-      charType: "alphabet",
-      hasHalfWidth: true,
-      hasFullWidth: true,
-      hasUpperCase: true,
-    },
-    {
-      charType: "num",
-      hasHalfWidth: true,
-      hasFullWidth: true,
-      // TODO zero padding
-    },
-  ].map((x) => [x.charType, x]) as [CharType, CharTypeDefinition][]
-);
 
 export interface ItemType {
   name: ItemNameType;
-  charTypes: Array<CharType>;
+  charTypes?: Array<CharTypeDefinition>; // 1通りの書き方のみの場合は不要
+  hyphenated?: boolean;
 }
 
-// TODO specify charTypes
+const nameItemDef = [
+  // 半角スペース区切り
+  { charType: "kanji", width: ["full"] },
+  { charType: "hiragana", width: ["full"] },
+  { charType: "katakana", width: ["full"] },
+  {
+    charType: "alphabet",
+    width: ["full", "half"],
+    case: ["upper", "capitalized"],
+  },
+] as Array<CharTypeDefinition>;
+
+const numItemDef = [
+  { charType: "number", width: ["full", "half"] },
+] as Array<CharTypeDefinition>;
+
 export const ItemTypes: Array<ItemType> = [
-  { name: "nickname", charTypes: [] },
-  { name: "full name", charTypes: [] },
-  { name: "first name", charTypes: [] },
-  { name: "last name", charTypes: [] },
+  {
+    name: "nickname",
+    charTypes: [
+      { charType: "kanji", width: ["full"] },
+      { charType: "hiragana", width: ["full"] },
+      { charType: "katakana", width: ["full"] },
+      {
+        charType: "alphabet",
+        width: ["half"],
+        case: ["mix"],
+      },
+    ],
+  },
+  {
+    name: "full name",
+    charTypes: nameItemDef,
+  },
+  { name: "first name", charTypes: nameItemDef },
+  { name: "last name", charTypes: nameItemDef },
 
   { name: "birth date", charTypes: [] },
-  { name: "birth year", charTypes: [] },
-  { name: "birth month", charTypes: [] },
-  { name: "birth day", charTypes: [] },
+  { name: "birth year" },
+  { name: "birth month" },
+  { name: "birth day" },
 
-  { name: "sex", charTypes: [] },
+  { name: "sex" },
 
-  { name: "postal code", charTypes: [] },
-  { name: "postal code 1", charTypes: [] },
-  { name: "postal code 2", charTypes: [] },
-  { name: "country", charTypes: [] },
-  { name: "prefecture", charTypes: [] },
-  { name: "city", charTypes: [] },
-  { name: "city county", charTypes: [] },
-  { name: "street", charTypes: [] },
-  { name: "house number", charTypes: [] },
-  { name: "building", charTypes: [] },
+  {
+    name: "postal code",
+    charTypes: numItemDef,
+    hyphenated: true,
+  },
+  { name: "postal code 1", charTypes: numItemDef },
+  { name: "postal code 2", charTypes: numItemDef },
+  // TODO アルファベット
+  { name: "country" },
+  { name: "prefecture" },
+  { name: "city" },
+  { name: "city county" },
+  {
+    name: "street",
+    charTypes: [{ charType: "kanji", width: ["full", "mix"] }],
+  },
+  {
+    name: "house number",
+    charTypes: [{ charType: "kanji", width: ["full", "mix"] }],
+  },
+  {
+    name: "building",
+    charTypes: [{ charType: "kanji", width: ["full", "mix"] }],
+  },
 
-  { name: "email", charTypes: [] },
-  { name: "phone number", charTypes: [] },
-  { name: "phone number 1", charTypes: [] },
-  { name: "phone number 2", charTypes: [] },
-  { name: "phone number 3", charTypes: [] },
+  { name: "email" },
+  { name: "phone number", charTypes: numItemDef, hyphenated: true },
+  { name: "phone number 1", charTypes: numItemDef },
+  { name: "phone number 2", charTypes: numItemDef },
+  { name: "phone number 3", charTypes: numItemDef },
 ];

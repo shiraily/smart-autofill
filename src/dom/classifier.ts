@@ -1,21 +1,27 @@
 import {
   categoryItems,
   CategoryNameType,
+  CharType,
   ItemNameType,
 } from "../entity/Entity";
-import { MemberField } from "../entity/User";
+import { InputResult } from "../entity/User";
 import { FormControl } from "./extractor";
 
 const midScore = 100;
 const highScore = 10_000;
 
 // form control要素が何のフィールドかを分類する
-export function classify(formControl: FormControl): MemberField | null {
+export function classify(formControl: FormControl): InputResult | null {
   // TODO sometimes parent disables form controls
   const scores = new Map<ItemNameType, number>();
+  const charScores = new Map<CharType, number>();
 
   function add(type: ItemNameType, score: number) {
     scores.set(type, (scores.get(type) || 0) + score);
+  }
+
+  function addCharScore(type: CharType, score: number) {
+    charScores.set(type, (charScores.get(type) || 0) + score);
   }
 
   function addToCategory(type: CategoryNameType, score: number) {
@@ -66,7 +72,6 @@ export function classify(formControl: FormControl): MemberField | null {
     }
   });
 
-  // TODO
   // const placeholder = element.getAttribute("placeholder") || "";
 
   const label = formControl.label;
@@ -76,9 +81,14 @@ export function classify(formControl: FormControl): MemberField | null {
       return;
     }
   });
+  charScoreMap.forEach((value, _label) => {
+    if (_label.indexOf(_label) >= 0) {
+      addCharScore(value.key, value.score);
+    }
+  });
 
   const item = [...scores.entries()].sort((a, b) => b[1] - a[1]);
-  return item.length ? ({ name: item[0][0] } as MemberField) : null;
+  return item.length ? ({ itemNameType: item[0][0] } as InputResult) : null;
 }
 
 const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
@@ -113,4 +123,15 @@ const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   //["役職名", { key: "", score: highScore }],
   ["メールアドレス", { key: "email", score: highScore }],
   ["email", { key: "email", score: highScore }],
+]);
+
+const charScoreMap = new Map<string, { key: CharType; score: number }>([
+  ["漢字", { key: "kanji", score: highScore }],
+  ["カタカナ", { key: "katakana", score: highScore }],
+  ["ひらがな", { key: "hiragana", score: highScore }],
+  ["英字", { key: "alphabet", score: highScore }],
+  ["英数字", { key: "alphabet", score: highScore }],
+  ["数字", { key: "number", score: highScore }],
+  ["太郎", { key: "kanji", score: highScore }],
+  ["花子", { key: "kanji", score: highScore }],
 ]);

@@ -26,6 +26,6 @@ export function fillForm(formControls: Array<Element>) {
   formControls.forEach((element: Element) => {
     // TODO set value
     (element as HTMLInputElement).value =
-      classify(extract(element as HTMLElement))?.name || "";
+      classify(extract(element as HTMLElement))?.itemNameType || "";
   });
 }
