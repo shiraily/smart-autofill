@@ -1,4 +1,5 @@
 import { InputType, inputTypes } from "../entity/Entity";
+import { UserDataReader } from "../entity/User";
 import { classify } from "./classifier";
 import { extract } from "./extractor";
 
@@ -23,9 +24,12 @@ function isFormControl(element: Element): boolean {
 
 export function fillForm(formControls: Array<Element>) {
   console.log("filling form");
+  const userData = new UserDataReader();
+  userData.readFromJson("");
+
   formControls.forEach((element: Element) => {
-    // TODO set value
-    (element as HTMLInputElement).value =
-      classify(extract(element as HTMLElement))?.itemNameType || "";
+    const estimated = classify(extract(element as HTMLElement));
+    if (!estimated) return;
+    (element as HTMLInputElement).value = userData.get(estimated.itemNameType);
   });
 }

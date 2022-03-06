@@ -2,3 +2,5 @@
 /tests/private/data/
 
 /node_modules/
+
+secret_example.ts
