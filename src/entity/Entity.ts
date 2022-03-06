@@ -70,6 +70,7 @@ export const itemNames = [
   "street", // 町名 / 条丁目
   "house number", // 番地
   "building", // 建物名・部屋番号
+  "after street", // 番地以降
 
   "email", // TODO @前後で分割
   "phone number",

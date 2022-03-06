@@ -109,11 +109,14 @@ const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   ["都道府県", { key: "prefecture", score: highScore }],
   ["市区町村", { key: "city", score: highScore }],
   ["市区郡", { key: "city county", score: highScore }],
+  ["郡市区", { key: "city county", score: highScore }],
   ["町名", { key: "street", score: highScore }],
   ["名", { key: "first name", score: midScore + 1 }], // 町名優先のため
   ["番地", { key: "house number", score: highScore }],
   ["建物", { key: "building", score: highScore }],
   ["部屋番号", { key: "building", score: highScore }],
+  ["番地以降", { key: "after street", score: highScore }],
+  ["それ以降", { key: "after street", score: highScore }], // TODO
   ["市外局番", { key: "phone number 1", score: highScore }],
   ["市内局番", { key: "phone number 2", score: highScore }],
   ["加入者番号", { key: "phone number 3", score: highScore }],
