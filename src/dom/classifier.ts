@@ -54,15 +54,23 @@ export function classify(formControl: FormControl): InputResult | null {
   // name属性
   const name = formControl.name;
   // first name <-> last nameの間違いがたまにある
-  ["nickname", "email", "mail add", "first name", "last name"].forEach(
-    (_name) => {
-      if (name.indexOf(_name) >= 0) {
-        add(_name as ItemNameType, midScore);
-      }
+  [
+    "nickname",
+    "email",
+    "mail add",
+    "first name",
+    "last name",
+    "prefecture",
+    "city",
+    "street",
+  ].forEach((_name) => {
+    if (name.indexOf(_name) >= 0) {
+      add(_name as ItemNameType, midScore);
     }
-  );
+  });
   (
     [
+      ["zip", "postal code"],
       ["post no first", "postal code 1"],
       ["post no second", "postal code 2"],
     ] as [string, ItemNameType][]
