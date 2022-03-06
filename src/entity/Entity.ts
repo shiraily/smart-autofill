@@ -80,9 +80,15 @@ export const itemNames = [
 ];
 export type ItemNameType = typeof itemNames[number];
 
-const categoryNames = ["name", "birth date", "phone number"] as const;
+const categoryNames = [
+  "name",
+  "birth date",
+  "phone number",
+  "address",
+] as const;
 export type CategoryNameType = typeof categoryNames[number];
 
+// TODO strict type
 export const categoryItems = new Map<CategoryNameType, ItemNameType[]>([
   ["name", ["full name", "first name", "last name"]],
   ["birth date", ["birth date", "birth year", "birth month", "birth day"]],
@@ -90,7 +96,25 @@ export const categoryItems = new Map<CategoryNameType, ItemNameType[]>([
     "phone number",
     ["phone number", "phone number 1", "phone number 2", "phone number 3"],
   ],
+  [
+    "address",
+    [
+      "postal code",
+      "postal code 1",
+      "postal code 2",
+      "country",
+      "prefecture",
+      "city",
+      "city county",
+      "street",
+      "house number",
+      "building",
+      "after street",
+    ],
+  ],
 ]);
+
+export const addressItems = new Set(categoryItems.get("address"));
 
 /** 文字の種類。例: ひらがな */
 export type CharType =

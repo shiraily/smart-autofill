@@ -1,5 +1,6 @@
 import { InputType } from "../entity/Entity";
 import { normalize } from "../text/textUtil";
+import { isFormControl } from "./fill";
 
 export interface FormControl {
   tagName: string;
@@ -26,7 +27,6 @@ const maxParentLevelForLabel = 3;
 // 対応するlabel要素を取得する
 function getLabelText(element: HTMLElement): string {
   let level = 0;
-  const id = element.getAttribute("id");
 
   let currentElement: HTMLElement = element;
   while (level < maxParentLevelForLabel) {
@@ -35,15 +35,8 @@ function getLabelText(element: HTMLElement): string {
       return "";
     }
 
-    const labels = parent?.querySelectorAll("label");
-    const label = Array.from(labels || []).find((l) => {
-      if (l.getAttribute("for") === id) {
-        return true;
-      } else if (l.contains(element)) {
-        return true;
-      }
-      return false;
-    });
+    const labels = Array.from(parent?.querySelectorAll("label")) || [];
+    const label = getMatchedLabel(labels, element, parent);
     if (label) {
       return label.textContent || "";
     }
@@ -51,4 +44,32 @@ function getLabelText(element: HTMLElement): string {
     level++;
   }
   return "";
+}
+
+function getMatchedLabel(
+  labels: HTMLLabelElement[],
+  targetElement: HTMLElement,
+  parent: HTMLElement
+): HTMLLabelElement | null {
+  const id = targetElement.getAttribute("id");
+  if (id) {
+    const label = labels.find((l) => {
+      if (l.getAttribute("for") === id) {
+        return true;
+      }
+    });
+    if (label) {
+      return label;
+    }
+  }
+  if (labels.length === 1) {
+    if (
+      labels[0].contains(targetElement) &&
+      Array.from(parent.querySelectorAll("*")).filter(isFormControl).length ===
+        1
+    ) {
+      return labels[0];
+    }
+  }
+  return null;
 }

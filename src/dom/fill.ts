@@ -1,4 +1,4 @@
-import { InputType, inputTypes } from "../entity/Entity";
+import { addressItems, InputType, inputTypes } from "../entity/Entity";
 import { UserDataReader } from "../entity/User";
 import { classify } from "./classifier";
 import { extract } from "./extractor";
@@ -10,9 +10,9 @@ export function listFormControls(): Array<Element> {
   return formCandidates.filter((x) => isFormControl(x));
 }
 
-function isFormControl(element: Element): boolean {
-  const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
+export function isFormControl(element: Element): boolean {
   const tagName = element.tagName.toLowerCase();
+  const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
   if (
     !(tagName === "input" && inputTypes.includes(type)) &&
     tagName !== "select"
@@ -22,14 +22,18 @@ function isFormControl(element: Element): boolean {
   return true;
 }
 
-export function fillForm(formControls: Array<Element>) {
-  console.log("filling form");
+export function fillForm(
+  formControls: Array<Element>,
+  forMoving: boolean = true
+) {
+  console.log("filling form. moving mode:", forMoving);
   const userData = new UserDataReader();
   userData.readFromJson("");
 
   formControls.forEach((element: Element) => {
     const estimated = classify(extract(element as HTMLElement));
     if (!estimated) return;
+    if (forMoving && !addressItems.has(estimated.itemNameType)) return;
     (element as HTMLInputElement).value = userData.get(estimated.itemNameType);
   });
 }
