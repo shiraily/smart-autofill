@@ -1,6 +1,11 @@
-import { addressItems, InputType, inputTypes } from "../entity/Entity";
+import { InputType, inputTypes } from "../entity/Entity";
 import { UserDataReader } from "../entity/User";
-import { classify } from "./classifier";
+import {
+  calcScores,
+  finalizeAddressItems,
+  isAddressItem,
+  Score,
+} from "./classifier";
 import { extract } from "./extractor";
 
 const $ = document.querySelectorAll.bind(document);
@@ -30,10 +35,27 @@ export function fillForm(
   const userData = new UserDataReader();
   userData.readFromJson("");
 
-  formControls.forEach((element: Element) => {
-    const estimated = classify(extract(element as HTMLElement));
-    if (!estimated) return;
-    if (forMoving && !addressItems.has(estimated.itemNameType)) return;
-    (element as HTMLInputElement).value = userData.get(estimated.itemNameType);
+  const addressItems = filterAddressItems(formControls);
+  const newScore = finalizeAddressItems(addressItems.map((i) => i[1]));
+
+  addressItems.forEach(([element, _], i) => {
+    (element as HTMLInputElement).value = userData.get(
+      newScore[i].itemNameType
+    );
   });
+}
+
+export function filterAddressItems(
+  formControls: Array<Element>
+): [Element, Score[]][] {
+  return formControls
+    .map((element: Element) => {
+      return [element, calcScores(extract(element as HTMLElement))] as [
+        Element,
+        Score[]
+      ];
+    })
+    .filter(([_, scores]) => {
+      return isAddressItem(scores);
+    });
 }

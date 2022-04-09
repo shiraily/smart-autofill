@@ -1,17 +1,21 @@
-import {
-  categoryItems,
-  CategoryNameType,
-  CharType,
-  ItemNameType,
-} from "../entity/Entity";
-import { InputResult } from "../entity/User";
+import { addressItems, CharType, ItemNameType } from "../entity/Entity";
 import { FormControl } from "./extractor";
 
 const midScore = 100;
 const highScore = 10_000;
 
-// form control要素が何のフィールドかを分類する
-export function classify(formControl: FormControl): InputResult | null {
+export interface Score {
+  itemNameType: ItemNameType;
+  charType: CharType;
+  score: number;
+}
+
+export interface FormCategory {
+  category: string;
+  formControls: Score[][];
+}
+
+export function calcScores(formControl: FormControl): Score[] {
   // TODO sometimes parent disables form controls
   const scores = new Map<ItemNameType, number>();
   const charScores = new Map<CharType, number>();
@@ -22,12 +26,6 @@ export function classify(formControl: FormControl): InputResult | null {
 
   function addCharScore(type: CharType, score: number) {
     charScores.set(type, (charScores.get(type) || 0) + score);
-  }
-
-  function addToCategory(type: CategoryNameType, score: number) {
-    categoryItems.get(type)?.forEach((i) => {
-      add(i, score);
-    });
   }
 
   // type属性とtagName
@@ -41,7 +39,6 @@ export function classify(formControl: FormControl): InputResult | null {
 
   // name属性
   const name = formControl.name;
-  // first name <-> last nameの間違いがたまにある
   ["prefecture", "city", "street"].forEach((_name) => {
     if (name.indexOf(_name) >= 0) {
       add(_name as ItemNameType, midScore);
@@ -75,7 +72,15 @@ export function classify(formControl: FormControl): InputResult | null {
   });
 
   const item = [...scores.entries()].sort((a, b) => b[1] - a[1]);
-  return item.length ? ({ itemNameType: item[0][0] } as InputResult) : null;
+  return item.map(([itemNameType, score]) => ({
+    itemNameType,
+    score,
+    charType: "hiragana", // TODO
+  }));
+}
+
+export function isAddressItem(scores: Score[]): boolean {
+  return scores.length ? addressItems.has(scores[0].itemNameType) : false;
 }
 
 const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
@@ -83,14 +88,14 @@ const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   ["下三桁", { key: "postal code 2", score: highScore }],
   ["都道府県", { key: "prefecture", score: highScore }],
   ["市区町村", { key: "city", score: highScore }],
-  ["市区郡", { key: "city county", score: highScore }],
-  ["郡市区", { key: "city county", score: highScore }],
+  ["市区郡", { key: "city", score: highScore }],
+  ["郡市区", { key: "city", score: highScore }],
   ["町名", { key: "street", score: highScore }],
   ["番地", { key: "house number", score: highScore }],
   ["建物", { key: "building", score: highScore }],
   ["部屋番号", { key: "building", score: highScore }],
-  ["番地以降", { key: "after street", score: highScore }],
-  ["それ以降", { key: "after street", score: highScore }],
+  ["番地以降", { key: "after address", score: highScore }],
+  ["それ以降", { key: "after address", score: highScore }],
 ]);
 
 const charScoreMap = new Map<string, { key: CharType; score: number }>([
@@ -103,3 +108,11 @@ const charScoreMap = new Map<string, { key: CharType; score: number }>([
   ["太郎", { key: "kanji", score: highScore }],
   ["花子", { key: "kanji", score: highScore }],
 ]);
+
+// TODO 他のcontrolの情報を用いてスコアを確定させる
+export function finalizeAddressItems(scores: Score[][]): Score[] {
+  const addressItems = scores.filter(isAddressItem);
+  addressItems[0][0].score = addressItems[0][0].score;
+
+  return scores.map((s) => s[0]);
+}

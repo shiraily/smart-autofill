@@ -1,9 +1,9 @@
 import { listFormControls } from "../../src/dom/fill";
 import { normalize } from "../../src/text/textUtil";
-import { itemNames } from "../../src/entity/Entity";
+import { addressItems, itemNames } from "../../src/entity/Entity";
 import fs from "fs";
-import { classify } from "../../src/dom/classifier";
 import { extract } from "../../src/dom/extractor";
+import { calcScores } from "../../src/dom/classifier";
 
 describe("Fill form simply", () => {
   document.body.innerHTML = fs
@@ -13,19 +13,20 @@ describe("Fill form simply", () => {
   const formControls = listFormControls();
 
   const itemNamesSet = new Set(itemNames);
+
   formControls.forEach((x) => {
     const dataAttrs = filterDataAttributes(getAttributes(x));
     if (!dataAttrs.length) return;
 
     const normalized = dataAttrs.map((a) => normalize(a));
     const matched = normalized.find((n) => itemNamesSet.has(n));
-    expect(matched).toBeTruthy();
-    // TODO 全体を見て入力値を決める可能性があるので、全体でclassifyしたい
-    const formControl = extract(x as HTMLElement);
-    const actual = classify(formControl);
+    if (!addressItems.has(matched as string)) return;
 
+    const formControl = extract(x as HTMLElement);
     test(`${JSON.stringify(formControl)}`, () => {
-      expect(actual?.itemNameType).toBe(matched);
+      const scores = calcScores(formControl);
+      console.log(scores);
+      expect(scores[0].itemNameType).toBe(matched);
       // TODO katakana, etc.
     });
   });

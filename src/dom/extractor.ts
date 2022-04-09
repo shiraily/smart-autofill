@@ -2,11 +2,6 @@ import { InputType } from "../entity/Entity";
 import { normalize } from "../text/textUtil";
 import { isFormControl } from "./fill";
 
-export interface FormCategory {
-  category: string;
-  formControls: FormControl[];
-}
-
 export interface FormControl {
   tagName: string;
   id: string;

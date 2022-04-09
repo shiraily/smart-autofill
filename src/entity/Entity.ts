@@ -65,12 +65,11 @@ export const itemNames = [
   "postal code 2", // 郵便番号 後半4桁
   "country", // 国
   "prefecture", // 都道府県
-  "city", // 市区町村
-  "city county", // 市区郡
+  "city", // 市区町村, 市区郡
   "street", // 町名 / 条丁目
   "house number", // 番地
   "building", // 建物名・部屋番号
-  "after street", // 番地以降
+  "after address", // 番地以降
 
   "email", // TODO @前後で分割
   "phone number",
@@ -105,11 +104,10 @@ export const categoryItems = new Map<CategoryNameType, ItemNameType[]>([
       "country",
       "prefecture",
       "city",
-      "city county",
       "street",
       "house number",
       "building",
-      "after street",
+      "after address",
     ],
   ],
 ]);
@@ -194,7 +192,7 @@ export const ItemTypes: Array<ItemType> = [
   { name: "country" },
   { name: "prefecture" },
   { name: "city" },
-  { name: "city county" },
+  //{ name: "city county" },
   {
     name: "street",
     charTypes: [{ charType: "kanji", width: ["full", "mix"] }],
