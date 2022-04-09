@@ -17,26 +17,38 @@ export function extract(element: HTMLElement): FormControl {
   const name = normalize(element.getAttribute("name"));
   const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
   const placeholder = element.getAttribute("placeholder") || "";
-  const label = getLabelText(element);
+  const label = getText(element);
   return { tagName, id, name, type, placeholder, label };
 }
 
 // label要素取得のためにたどる最大の親要素数
-const maxParentLevelForLabel = 3;
+const maxParentLevel = 3;
+
+function getText(element: HTMLElement): string {
+  return (
+    getLabelText(element, getMatchedLabel) ||
+    getLabelText(element, getTableHeader)
+  );
+}
 
 // 対応するlabel要素を取得する
-function getLabelText(element: HTMLElement): string {
+function getLabelText(
+  element: HTMLElement,
+  extractor: (
+    targetElement: HTMLElement,
+    parent: HTMLElement
+  ) => HTMLElement | null
+): string {
   let level = 0;
 
   let currentElement: HTMLElement = element;
-  while (level < maxParentLevelForLabel) {
+  while (level < maxParentLevel) {
     const parent = currentElement.parentElement;
     if (!parent) {
       return "";
     }
 
-    const labels = Array.from(parent?.querySelectorAll("label")) || [];
-    const label = getMatchedLabel(labels, element, parent);
+    const label = extractor(element, parent);
     if (label) {
       return label.textContent || "";
     }
@@ -47,11 +59,11 @@ function getLabelText(element: HTMLElement): string {
 }
 
 function getMatchedLabel(
-  labels: HTMLLabelElement[],
   targetElement: HTMLElement,
   parent: HTMLElement
 ): HTMLLabelElement | null {
   const id = targetElement.getAttribute("id");
+  const labels = Array.from(parent?.querySelectorAll("label")) || [];
   if (id) {
     const label = labels.find((l) => {
       if (l.getAttribute("for") === id) {
@@ -72,4 +84,15 @@ function getMatchedLabel(
     }
   }
   return null;
+}
+
+/**
+ * form controlがtd要素のとき、対応するth要素のテキストを取得
+ */
+function getTableHeader(
+  _: HTMLElement,
+  parent: HTMLElement
+): HTMLTableCellElement | null {
+  if (parent.tagName.toLowerCase() !== "tr") return null;
+  return parent.querySelector("th");
 }

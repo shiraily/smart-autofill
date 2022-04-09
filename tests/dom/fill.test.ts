@@ -7,7 +7,7 @@ import { calcScores } from "../../src/dom/classifier";
 
 describe("Fill form simply", () => {
   document.body.innerHTML = fs
-    .readFileSync("tests/private/data/ana.html")
+    .readFileSync("tests/private/data/rakuten.html")
     .toString();
 
   const formControls = listFormControls();

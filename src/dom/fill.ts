@@ -1,4 +1,4 @@
-import { InputType, inputTypes } from "../entity/Entity";
+import { categoryItems, InputType, inputTypes } from "../entity/Entity";
 import { UserDataReader } from "../entity/User";
 import {
   calcScores,
@@ -35,17 +35,26 @@ export function fillForm(
   const userData = new UserDataReader();
   userData.readFromJson("");
 
-  const addressItems = filterAddressItems(formControls);
-  const newScore = finalizeAddressItems(addressItems.map((i) => i[1]));
+  const addressControls = filterAddressControls(formControls);
+  const newScore = finalizeAddressItems(addressControls.map((i) => i[1]));
 
-  addressItems.forEach(([element, _], i) => {
-    (element as HTMLInputElement).value = userData.get(
-      newScore[i].itemNameType
-    );
+  addressControls.forEach(([element, _], i) => {
+    if (newScore[i].itemNameType === "after address") {
+      const addressItems = categoryItems.get("address") || [];
+      (element as HTMLInputElement).value = addressItems
+        .slice(addressItems.indexOf(newScore[i - 1].itemNameType) + 1)
+        .map((item) => userData.get(item))
+        .filter((i) => i)
+        .join(" ");
+    } else {
+      (element as HTMLInputElement).value = userData.get(
+        newScore[i].itemNameType
+      );
+    }
   });
 }
 
-export function filterAddressItems(
+export function filterAddressControls(
   formControls: Array<Element>
 ): [Element, Score[]][] {
   return formControls
