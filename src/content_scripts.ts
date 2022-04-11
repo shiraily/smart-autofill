@@ -3,9 +3,13 @@ import { fillForm, listFormControls } from "./dom/fill";
 
 console.log("content script is loaded!");
 browser.runtime.onMessage.addListener((msg, _) => {
-  console.log(msg, _, "is msg");
-  if (msg == "FillSignUp") {
-    fillForm(listFormControls());
+  if (msg !== "FillSignUp") return;
+
+  const formControls = listFormControls();
+  if (!formControls.length) {
+    alert("No form tag found");
+    return;
   }
+  fillForm(formControls);
   //return {response: "ok"};
 });
