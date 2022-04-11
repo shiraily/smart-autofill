@@ -52,15 +52,16 @@ export function calcScores(formControl: FormControl): Score[] {
     ] as [string, ItemNameType][]
   ).forEach(([_name, type]) => {
     if (name.indexOf(_name) >= 0) {
-      add(type, highScore);
+      add(type, midScore);
     }
   });
-
-  // const placeholder = element.getAttribute("placeholder") || "";
 
   const label = formControl.label;
   labelScoreMap.forEach((value, _label) => {
     if (label.indexOf(_label) >= 0) {
+      add(value.key, value.score);
+      return;
+    } else if (formControl.placeholder.indexOf(_label) >= 0) {
       add(value.key, value.score);
       return;
     }
@@ -84,6 +85,7 @@ export function isAddressItem(scores: Score[]): boolean {
 }
 
 const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
+  ["郵便番号", { key: "postal code", score: highScore }],
   ["上三桁", { key: "postal code 1", score: highScore }],
   ["下三桁", { key: "postal code 2", score: highScore }],
   ["都道府県", { key: "prefecture", score: highScore }],
@@ -93,7 +95,10 @@ const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   ["町名", { key: "street", score: highScore }],
   ["番地", { key: "house number", score: highScore }],
   ["建物", { key: "building", score: highScore }],
+  ["マンション", { key: "building", score: highScore }],
+  ["アパート", { key: "building", score: highScore }],
   ["部屋番号", { key: "building", score: highScore }],
+  ["号室", { key: "building", score: highScore }],
   ["番地以降", { key: "after address", score: highScore }],
   ["それ以降", { key: "after address", score: highScore }],
 ]);
