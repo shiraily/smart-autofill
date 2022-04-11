@@ -1,13 +1,14 @@
 // list: https://developer.mozilla.org/ja/docs/Web/HTML/Element/form#see_also
+// TODO support commented out form elements
 export type FormControlTag =
-  // | "button" TODO
-  // | "datalist" TODO
-  // | "fieldset" TODO
+  // | "button"
+  // | "datalist"
+  // | "fieldset"
   | "input"
   | "label"
-  // | "legend" TODO
+  // | "legend"
   // | "meter"
-  // | "optgroup" TODO
+  // | "optgroup"
   | "option"
   // | "output"
   // | "progress"
@@ -33,7 +34,7 @@ export const inputTypes = [
 ] as const;
 export type InputType = typeof inputTypes[number];
 
-const clueTypes = [
+/*const clueTypes = [
   "tagName",
   "name",
   "type",
@@ -42,9 +43,8 @@ const clueTypes = [
   "labelText",
   "siblingNo",
   // "class", TODO class1, class2, ...?
-  // "numSiblings", TODO
-] as const;
-export type ClueType = typeof clueTypes[number];
+  // "numSiblings",
+] as const;*/
 
 export const itemNames = [
   "nickname",
@@ -71,7 +71,9 @@ export const itemNames = [
   "building", // 建物名・部屋番号
   "after address", // 番地以降
 
-  "email", // TODO @前後で分割
+  "email",
+  "email 1", // before @
+  "email 2",
   "phone number",
   "phone number 1",
   "phone number 2",

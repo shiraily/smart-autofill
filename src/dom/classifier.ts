@@ -114,7 +114,6 @@ const charScoreMap = new Map<string, { key: CharType; score: number }>([
   ["花子", { key: "kanji", score: highScore }],
 ]);
 
-// TODO 他のcontrolの情報を用いてスコアを確定させる
 export function finalizeAddressItems(scores: Score[][]): Score[] {
   const addressItems = scores.filter(isAddressItem);
 
