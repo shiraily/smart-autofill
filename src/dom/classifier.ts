@@ -6,7 +6,7 @@ const highScore = 10_000;
 
 export interface Score {
   itemNameType: ItemNameType;
-  charType: CharType;
+  charType?: CharType;
   score: number;
 }
 
@@ -39,7 +39,7 @@ export function calcScores(formControl: FormControl): Score[] {
 
   // name属性
   const name = formControl.name;
-  ["prefecture", "city", "street"].forEach((_name) => {
+  ["prefecture", "city", "street", "building"].forEach((_name) => {
     if (name.indexOf(_name) >= 0) {
       add(_name as ItemNameType, midScore);
     }
@@ -112,7 +112,18 @@ const charScoreMap = new Map<string, { key: CharType; score: number }>([
 // TODO 他のcontrolの情報を用いてスコアを確定させる
 export function finalizeAddressItems(scores: Score[][]): Score[] {
   const addressItems = scores.filter(isAddressItem);
-  addressItems[0][0].score = addressItems[0][0].score;
+
+  const zipCodeItems = addressItems.filter(
+    (scores) => scores[0].itemNameType === "postal code"
+  );
+  if (zipCodeItems.length === 2) {
+    zipCodeItems[0].push({ score: Infinity, itemNameType: "postal code 1" });
+    zipCodeItems[1].push({ score: Infinity, itemNameType: "postal code 2" });
+  }
+
+  addressItems.forEach((scores) => {
+    scores.sort((a, b) => b.score - a.score);
+  });
 
   return scores.map((s) => s[0]);
 }

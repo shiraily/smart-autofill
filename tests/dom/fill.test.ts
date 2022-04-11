@@ -7,7 +7,7 @@ import { calcScores } from "../../src/dom/classifier";
 
 describe("Fill form simply", () => {
   document.body.innerHTML = fs
-    .readFileSync("tests/private/data/rakuten.html")
+    .readFileSync("tests/private/data/yodobashi.html")
     .toString();
 
   const formControls = listFormControls();
@@ -26,6 +26,7 @@ describe("Fill form simply", () => {
     test(`${JSON.stringify(formControl)}`, () => {
       const scores = calcScores(formControl);
       console.log(scores);
+      expect(scores?.length).toBeGreaterThan(0);
       expect(scores[0].itemNameType).toBe(matched);
       // TODO katakana, etc.
     });
