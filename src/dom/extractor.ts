@@ -9,6 +9,7 @@ export interface FormControl {
   type: InputType;
   placeholder: string;
   label: string;
+  neighborText: string;
 }
 
 export function extract(element: HTMLElement): FormControl {
@@ -17,45 +18,41 @@ export function extract(element: HTMLElement): FormControl {
   const name = normalize(element.getAttribute("name"));
   const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
   const placeholder = element.getAttribute("placeholder") || "";
-  const label = getText(element);
-  return { tagName, id, name, type, placeholder, label };
+  const [label, neighborText] = getText(element);
+  return { tagName, id, name, type, placeholder, label, neighborText };
 }
 
 // label要素取得のためにたどる最大の親要素数
 const maxParentLevel = 3;
 
-function getText(element: HTMLElement): string {
-  return (
-    getLabelText(element, getMatchedLabel) ||
-    getLabelText(element, getTableHeader)
-  );
-}
+const emptyLabelText = "none";
 
-// 対応するlabel要素を取得する
-function getLabelText(
-  element: HTMLElement,
-  extractor: (
-    targetElement: HTMLElement,
-    parent: HTMLElement
-  ) => HTMLElement | null
-): string {
-  let level = 0;
-
+function getText(element: HTMLElement): [string, string] {
   let currentElement: HTMLElement = element;
+  let neighborText = currentElement.textContent;
+  let labelText = "";
+
+  let level = 0;
   while (level < maxParentLevel) {
     const parent = currentElement.parentElement;
-    if (!parent) {
-      return "";
+    if (!parent) break;
+
+    if (
+      Array.from(parent.querySelectorAll("*")).filter(isFormControl).length ===
+      1
+    ) {
+      neighborText = parent.textContent;
     }
 
-    const label = extractor(element, parent);
-    if (label) {
-      return label.textContent || "";
+    const label =
+      getMatchedLabel(element, parent) || getTableHeader(element, parent);
+    if (label && !labelText) {
+      labelText = label.textContent || emptyLabelText;
     }
     currentElement = parent;
     level++;
   }
-  return "";
+  return [labelText === emptyLabelText ? "" : labelText, neighborText || ""];
 }
 
 function getMatchedLabel(

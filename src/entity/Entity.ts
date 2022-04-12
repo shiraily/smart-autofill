@@ -116,15 +116,21 @@ export const categoryItems = new Map<CategoryNameType, ItemNameType[]>([
 
 export const addressItems = new Set(categoryItems.get("address"));
 
-/** 文字の種類。例: ひらがな */
-export type CharType =
-  | "hiragana"
-  | "katakana"
-  | "kanji" // 漢字を含む。千代田区1-1-1, 山田
-  | "alphabet"
-  | "number";
+const charTypes = [
+  "hiragana",
+  "katakana",
+  "kanji", // 漢字を含む。千代田区1-1-1, 山田
+  "alphabet",
+  "number",
+];
+export const charTypeSet = new Set(charTypes);
 
-type CharWidth = "full" | "half" | "mix";
+/** 文字の種類。例: ひらがな */
+export type CharType = typeof charTypes[number];
+
+/** 全角・半角・混在 */
+export type CharWidth = "full" | "half" | "mix";
+/** 大文字・小文字・混在・先頭大文字 */
 type CharCase = "upper" | "lower" | "mix" | "capitalized";
 
 export type CharTypeDefinition = {
@@ -214,3 +220,7 @@ export const ItemTypes: Array<ItemType> = [
   { name: "phone number 2", charTypes: numItemDef },
   { name: "phone number 3", charTypes: numItemDef },
 ];
+
+export const ItemTypeMap = new Map<ItemNameType, ItemType>(
+  ItemTypes.map((item) => [item.name, item])
+);

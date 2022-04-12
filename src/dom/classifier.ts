@@ -1,31 +1,35 @@
-import { addressItems, CharType, ItemNameType } from "../entity/Entity";
+import {
+  addressItems,
+  CharType,
+  CharWidth,
+  ItemNameType,
+} from "../entity/Entity";
 import { FormControl } from "./extractor";
 
 const midScore = 100;
 const highScore = 10_000;
 
+export interface Candidate {
+  itemScore: Score[];
+  charWidthScore: Score2<CharWidth>[];
+}
+
 export interface Score {
   itemNameType: ItemNameType;
-  charType?: CharType;
   score: number;
 }
 
-export interface FormCategory {
-  category: string;
-  formControls: Score[][];
+export interface Score2<T> {
+  charWidth: T;
+  score: number;
 }
 
-export function calcScores(formControl: FormControl): Score[] {
+export function calcScores(formControl: FormControl): Candidate {
   // TODO sometimes parent disables form controls
   const scores = new Map<ItemNameType, number>();
-  const charScores = new Map<CharType, number>();
 
   function add(type: ItemNameType, score: number) {
     scores.set(type, (scores.get(type) || 0) + score);
-  }
-
-  function addCharScore(type: CharType, score: number) {
-    charScores.set(type, (charScores.get(type) || 0) + score);
   }
 
   // type属性とtagName
@@ -66,18 +70,13 @@ export function calcScores(formControl: FormControl): Score[] {
       return;
     }
   });
-  charScoreMap.forEach((value, _label) => {
-    if (_label.indexOf(_label) >= 0) {
-      addCharScore(value.key, value.score);
-    }
-  });
 
   const item = [...scores.entries()].sort((a, b) => b[1] - a[1]);
-  return item.map(([itemNameType, score]) => ({
+  const itemScore = item.map(([itemNameType, score]) => ({
     itemNameType,
     score,
-    charType: "hiragana", // TODO
   }));
+  return { itemScore, charWidthScore: calcCharWidthScore(formControl) };
 }
 
 export function isAddressItem(scores: Score[]): boolean {
@@ -103,6 +102,24 @@ const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   ["それ以降", { key: "after address", score: highScore }],
 ]);
 
+const charWidthMap = new Map<string, CharWidth>([
+  ["全角", "full"],
+  ["半角", "half"],
+]);
+
+function calcCharWidthScore(formControl: FormControl): Score2<CharWidth>[] {
+  const scores: Score2<CharWidth>[] = [];
+  charWidthMap.forEach((charWidth, clue) => {
+    if ([formControl.label, formControl.placeholder].indexOf(clue) >= 0) {
+      scores.push({ charWidth, score: highScore });
+    } else if (formControl.neighborText.indexOf(clue) >= 0) {
+      scores.push({ charWidth, score: midScore });
+    }
+  });
+  return scores;
+}
+
+/** TODO */
 const charScoreMap = new Map<string, { key: CharType; score: number }>([
   ["漢字", { key: "kanji", score: highScore }],
   ["カタカナ", { key: "katakana", score: highScore }],
@@ -114,6 +131,9 @@ const charScoreMap = new Map<string, { key: CharType; score: number }>([
   ["花子", { key: "kanji", score: highScore }],
 ]);
 
+/**
+ * 住所関連のスコアについて、他の情報を参照して再計算する
+ */
 export function finalizeAddressItems(scores: Score[][]): Score[] {
   const addressItems = scores.filter(isAddressItem);
 

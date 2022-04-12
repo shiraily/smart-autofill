@@ -7,3 +7,15 @@ export function normalize(word: string | null): string {
     .map((t) => t.toLowerCase())
     .join(" ");
 }
+
+export function toHalfWidth(value: string): string {
+  return value.replace(/./g, (s: string) => {
+    return String.fromCharCode(s.charCodeAt(0) - 0xfee0);
+  });
+}
+
+export function toFullWidth(value: string): string {
+  return value.replace(/[a-zA-Z0-9\-]/g, (s: string) => {
+    return String.fromCharCode(s.charCodeAt(0) + 0xfee0);
+  });
+}
