@@ -3,6 +3,7 @@ import {
   CharWidth,
   InputType,
   inputTypes,
+  ItemNameType,
   ItemTypeMap,
 } from "../entity/Entity";
 import { UserDataReader } from "../entity/User";
@@ -60,22 +61,35 @@ export function fillForm(
           .map((item) => userData.get(item))
           .filter((i) => i)
           .join(" "),
-        charWidth
+        charWidth,
+        itemNameType,
+        candidate.hyphenated
       );
     } else {
       (element as HTMLInputElement).value = finalizeInputText(
         userData.get(finalScore[i].itemNameType),
-        charWidth
+        charWidth,
+        itemNameType,
+        candidate.hyphenated
       );
     }
   });
 }
 
-function finalizeInputText(text: string, charWidth: CharWidth): string {
+function finalizeInputText(
+  text: string,
+  charWidth: CharWidth,
+  itemNameType: ItemNameType,
+  hyphenated: boolean
+): string {
+  const buf =
+    itemNameType === "postal code" && !hyphenated
+      ? text.replace("-", "")
+      : text;
   if (charWidth === "full") {
-    return toFullWidth(text);
+    return toFullWidth(buf);
   }
-  return text;
+  return buf;
 }
 
 /**

@@ -13,6 +13,7 @@ const highScore = 10_000;
 export interface Candidate {
   itemScore: Score[];
   charWidthScore: Score2<CharWidth>[];
+  hyphenated: boolean;
 }
 
 export interface Score {
@@ -79,7 +80,11 @@ export function calcScores(formControl: FormControl): Candidate {
     itemNameType,
     score,
   }));
-  return { itemScore, charWidthScore: calcCharWidthScore(formControl) };
+  return {
+    itemScore,
+    charWidthScore: calcCharWidthScore(formControl),
+    hyphenated: calcHyphenated(formControl),
+  };
 }
 
 export function isAddressItem(scores: Score[]): boolean {
@@ -113,13 +118,42 @@ const charWidthMap = new Map<string, CharWidth>([
 function calcCharWidthScore(formControl: FormControl): Score2<CharWidth>[] {
   const scores: Score2<CharWidth>[] = [];
   charWidthMap.forEach((charWidth, clue) => {
-    if ([formControl.label, formControl.placeholder].indexOf(clue) >= 0) {
+    if (
+      [formControl.label, formControl.placeholder].some(
+        (s) => s.indexOf(clue) >= 0
+      )
+    ) {
       scores.push({ charWidth, score: highScore });
     } else if (formControl.neighborText.indexOf(clue) >= 0) {
       scores.push({ charWidth, score: midScore });
     }
   });
   return scores;
+}
+
+const hyphenatedClues: [string, boolean][] = [
+  ["ハイフンあり", true],
+  ["ハイフン有り", true],
+  ["ハイフンなし", false],
+  ["ハイフン無し", false],
+];
+
+function calcHyphenated(formControl: FormControl): boolean {
+  let result = true;
+  for (const [clue, flag] of hyphenatedClues) {
+    if (
+      [formControl.label, formControl.placeholder].some(
+        (s) => s.indexOf(clue) >= 0
+      )
+    ) {
+      result = flag;
+      break;
+    } else if (formControl.neighborText.indexOf(clue) >= 0) {
+      result = flag;
+      break;
+    }
+  }
+  return result;
 }
 
 /** TODO */
