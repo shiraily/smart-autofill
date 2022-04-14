@@ -214,6 +214,10 @@ export const ItemTypes: Array<ItemType> = [
     name: "building",
     charTypes: [{ charType: "kanji", width: ["mix", "full"] }],
   },
+  {
+    name: "after address",
+    charTypes: [{ charType: "kanji", width: ["mix", "full"] }],
+  },
 
   { name: "email" },
   { name: "phone number", charTypes: numItemDef, hyphenated: true },

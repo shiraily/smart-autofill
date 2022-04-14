@@ -6,6 +6,7 @@ import {
 } from "../entity/Entity";
 import { FormControl } from "./extractor";
 
+const lowScore = 10;
 const midScore = 100;
 const highScore = 10_000;
 
@@ -68,6 +69,8 @@ export function calcScores(formControl: FormControl): Candidate {
     } else if (formControl.placeholder.indexOf(_label) >= 0) {
       add(value.key, value.score);
       return;
+    } else if (formControl.neighborText.indexOf(_label) >= 0) {
+      add(value.key, lowScore);
     }
   });
 
