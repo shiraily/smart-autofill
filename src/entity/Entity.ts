@@ -135,6 +135,7 @@ type CharCase = "upper" | "lower" | "mix" | "capitalized";
 
 export type CharTypeDefinition = {
   charType: CharType;
+  /** 優先度の高い順に並べる */
   width: CharWidth[];
   case?: CharCase[];
 };
@@ -158,7 +159,7 @@ const nameItemDef = [
 ] as Array<CharTypeDefinition>;
 
 const numItemDef = [
-  { charType: "number", width: ["full", "half"] },
+  { charType: "number", width: ["half", "full"] },
 ] as Array<CharTypeDefinition>;
 
 export const ItemTypes: Array<ItemType> = [
@@ -203,15 +204,15 @@ export const ItemTypes: Array<ItemType> = [
   //{ name: "city county" },
   {
     name: "street",
-    charTypes: [{ charType: "kanji", width: ["full", "mix"] }],
+    charTypes: [{ charType: "kanji", width: ["mix", "full"] }],
   },
   {
     name: "house number",
-    charTypes: [{ charType: "kanji", width: ["full", "mix"] }],
+    charTypes: [{ charType: "kanji", width: ["mix", "full"] }],
   },
   {
     name: "building",
-    charTypes: [{ charType: "kanji", width: ["full", "mix"] }],
+    charTypes: [{ charType: "kanji", width: ["mix", "full"] }],
   },
 
   { name: "email" },

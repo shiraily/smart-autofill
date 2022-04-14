@@ -3,11 +3,10 @@ import {
   CharWidth,
   InputType,
   inputTypes,
-  ItemNameType,
   ItemTypeMap,
 } from "../entity/Entity";
 import { UserDataReader } from "../entity/User";
-import { toFullWidth, toHalfWidth } from "../text/textUtil";
+import { toFullWidth } from "../text/textUtil";
 import {
   calcScores,
   Candidate,
@@ -75,8 +74,6 @@ export function fillForm(
 function finalizeInputText(text: string, charWidth: CharWidth): string {
   if (charWidth === "full") {
     return toFullWidth(text);
-  } else if (charWidth === "half") {
-    return toHalfWidth(text);
   }
   return text;
 }

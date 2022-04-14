@@ -8,14 +8,24 @@ export function normalize(word: string | null): string {
     .join(" ");
 }
 
-export function toHalfWidth(value: string): string {
-  return value.replace(/./g, (s: string) => {
+/*export function toHalfWidth(value: string): string {
+  return value.replace(/[０-９－−\　]/g, (s: string) => {
     return String.fromCharCode(s.charCodeAt(0) - 0xfee0);
   });
-}
+}*/
 
-export function toFullWidth(value: string): string {
-  return value.replace(/[a-zA-Z0-9\-]/g, (s: string) => {
+const halfToFullWidthMap = new Map([
+  [" ", "　"],
+  ["　", "　"], // 全角スペース
+  ["−", "ー"],
+  ["-", "ー"], // 半角のハイフンを長音に
+] as [string, string][]);
+
+export function toFullWidth(value: string) {
+  return value.replace(/[a-zA-Z0-9\-\s　−]/g, (s: string) => {
+    if (halfToFullWidthMap.has(s)) {
+      return halfToFullWidthMap.get(s) || "";
+    }
     return String.fromCharCode(s.charCodeAt(0) + 0xfee0);
   });
 }
