@@ -1,7 +1,8 @@
-import { InputType } from "../entity/Entity";
+import { AutocompleteValue, InputType } from "../entity/Entity";
 import { normalize } from "../text/textUtil";
 import { isFormControl } from "./fill";
 
+// TODO [key]: string;
 export interface FormControl {
   tagName: string;
   id: string;
@@ -10,6 +11,7 @@ export interface FormControl {
   placeholder: string;
   label: string;
   neighborText: string;
+  autocomplete: AutocompleteValue;
 }
 
 export function extract(element: HTMLElement): FormControl {
@@ -19,7 +21,18 @@ export function extract(element: HTMLElement): FormControl {
   const type = (element.getAttribute("type") || "").toLowerCase() as InputType;
   const placeholder = element.getAttribute("placeholder") || "";
   const [label, neighborText] = getText(element);
-  return { tagName, id, name, type, placeholder, label, neighborText };
+  const autocomplete =
+    (element.getAttribute("autocomplete") as AutocompleteValue) || "";
+  return {
+    tagName,
+    id,
+    name,
+    type,
+    placeholder,
+    label,
+    neighborText,
+    autocomplete,
+  };
 }
 
 // label要素取得のためにたどる最大の親要素数

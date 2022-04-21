@@ -34,6 +34,23 @@ export const inputTypes = [
 ] as const;
 export type InputType = typeof inputTypes[number];
 
+// Refer to: https://developer.mozilla.org/ja/docs/Web/HTML/Attributes/autocomplete#specifications
+const autocompleteValues = [
+  "street-address",
+  "address-line1",
+  "address-line2",
+  "address-line3",
+  "address-level4",
+  "address-level3",
+  "address-level2",
+  "address-level1",
+  "country",
+  "country-name",
+  "postal-code",
+] as const;
+
+export type AutocompleteValue = typeof autocompleteValues[number];
+
 /*const clueTypes = [
   "tagName",
   "name",

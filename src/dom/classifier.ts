@@ -1,5 +1,6 @@
 import {
   addressItems,
+  AutocompleteValue,
   CharType,
   CharWidth,
   ItemNameType,
@@ -75,6 +76,14 @@ export function calcScores(formControl: FormControl): Candidate {
     }
   });
 
+  const autocompleteValue = formControl.autocomplete;
+  autocompleteScoreMap.forEach((itemNameType, valueType) => {
+    if (autocompleteValue === valueType) {
+      add(itemNameType.key, itemNameType.score);
+      return;
+    }
+  });
+
   const item = [...scores.entries()].sort((a, b) => b[1] - a[1]);
   const itemScore = item.map(([itemNameType, score]) => ({
     itemNameType,
@@ -108,6 +117,17 @@ const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   ["号室", { key: "building", score: highScore }],
   ["番地以降", { key: "after address", score: highScore }],
   ["それ以降", { key: "after address", score: highScore }],
+]);
+
+const autocompleteScoreMap = new Map<
+  AutocompleteValue,
+  { key: ItemNameType; score: number }
+>([
+  ["postal-code", { key: "postal code", score: highScore }],
+  ["address-level1", { key: "prefecture", score: highScore }],
+  ["address-level2", { key: "city", score: highScore }],
+  ["street-address", { key: "after address", score: highScore }],
+  // TODO address-line1, 2
 ]);
 
 const charWidthMap = new Map<string, CharWidth>([
