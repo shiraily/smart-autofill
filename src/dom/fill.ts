@@ -19,7 +19,7 @@ import { extract } from "./extractor";
 const $ = document.querySelectorAll.bind(document);
 
 export function listFormControls(): Array<Element> {
-  const formCandidates = Array.from($("form *"));
+  const formCandidates = Array.from($("body *"));
   return formCandidates.filter((x) => isFormControl(x));
 }
 
@@ -66,12 +66,25 @@ export function fillForm(
         candidate.hyphenated
       );
     } else {
-      (element as HTMLInputElement).value = finalizeInputText(
+      const input = finalizeInputText(
         userData.get(finalScore[i].itemNameType),
         charWidth,
         itemNameType,
         candidate.hyphenated
       );
+      if (itemNameType === "prefecture" && element.tagName === "SELECT") {
+        const option = Array.from(element.childNodes).find((o) => {
+          const child = o as HTMLOptionElement;
+          return (
+            child.value === input ||
+            child.label === input ||
+            child.textContent?.includes(input)
+          );
+        }) as HTMLOptionElement;
+        (element as HTMLSelectElement).value = option.value;
+      } else {
+        (element as HTMLInputElement).value = input;
+      }
     }
   });
 }
