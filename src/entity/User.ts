@@ -1,4 +1,4 @@
-import { settings } from "../../secret_example";
+import { settings } from "../../secret";
 import { CharType, ItemNameType } from "./Entity";
 
 /** 分類結果を保持するためのエンティティ */
