@@ -115,7 +115,8 @@ const labelScoreMap = new Map<string, { key: ItemNameType; score: number }>([
   ["アパート", { key: "building", score: highScore }],
   ["部屋番号", { key: "building", score: highScore }],
   ["号室", { key: "building", score: highScore }],
-  ["番地以降", { key: "after address", score: highScore }],
+  ["番地以降", { key: "after address", score: highScore + 1 }],
+  ["番地・", { key: "after address", score: highScore + 1 }],
   ["それ以降", { key: "after address", score: highScore }],
 ]);
 
